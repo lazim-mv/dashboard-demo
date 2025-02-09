@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+    background: #F4F5FA;
+}
+
+
+.innerContainer {
+    width: 706px;
+    height: 457px;
+    border-radius: 8px;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    background: #ffffff;
+}
+
+.innerContainer h1 {
+    margin-top: 32px;
+    margin-bottom: 12px;
+}
+
+.innerContainer p {
+    width: 332px;
+    margin-bottom: 32px;
+}

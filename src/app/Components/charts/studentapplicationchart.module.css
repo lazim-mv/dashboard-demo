@@ -1,0 +1,35 @@
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.topContainer {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.chartTitle {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.leftFilters {
+  display: flex;
+  /* gap: 10px; */
+  align-items: center;
+  justify-content: center;
+  /* margin-bottom: 20px; */
+}
+
+.forCheckbox label {
+  display: flex;
+  align-items: center;
+}
+
+.responsiveChart {
+  min-height: 504px;
+}

@@ -1,0 +1,33 @@
+.courseList p {
+    font-size: 14px;
+}
+
+.courseList h5 {
+    font-size: 18px;
+    color: #4880FF;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    margin-top: 20px;
+}
+
+.listContainer p {
+    margin-bottom: 8px;
+}
+
+.list {
+    display: flex;
+    align-items: center;
+}
+
+.bullet {
+    margin-top: 2px;
+    margin-right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, .85);
+}
