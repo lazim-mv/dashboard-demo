@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { axiosInstance } from "@/app/configs/axios";import { ApiError } from "@/app/configs/errorTypes";
 
-interface University {
+export interface University {
     id: number;
     university_name: string;
     country: string;

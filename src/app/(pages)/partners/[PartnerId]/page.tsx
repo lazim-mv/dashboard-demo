@@ -8,7 +8,7 @@ import ActionButton from '@/app/Components/common/ActionButton';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { axiosInstance } from '@/app/configs/axios';
 
-const page = () => {
+const Page = () => {
     const router = useRouter();
     const { PartnerId } = useParams() as { PartnerId: string };
     const [buttonLoading, setButtonLoading] = useState<string | null>(null);
@@ -72,4 +72,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

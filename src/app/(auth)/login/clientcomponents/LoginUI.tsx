@@ -99,69 +99,69 @@ const LoginUI: React.FC = () => {
 
       router.push('/dashboard');
 
-      // try {
-      //   const response = await axios.post<LoginResponse>("/auth/login", {
-      //     email: values.username,
-      //     password: values.password
-      //   });
+      try {
+        const response = await axios.post<LoginResponse>("/auth/login", {
+          email: values.username,
+          password: values.password
+        });
 
-      //   if (response.data?.access_token && response.data?.refresh_token) {
-      //     const cookieOptions = {
-      //       secure: false,
-      //       sameSite: 'strict' as const,
-      //       domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
-      //       path: '/'
-      //     };
+        if (response.data?.access_token && response.data?.refresh_token) {
+          const cookieOptions = {
+            secure: false,
+            sameSite: 'strict' as const,
+            domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN,
+            path: '/'
+          };
 
-      //     Cookies.set('access_token_level_up', response.data.access_token, {
-      //       ...cookieOptions,
-      //       expires: 1 / 288
-      //     });
+          Cookies.set('access_token_level_up', response.data.access_token, {
+            ...cookieOptions,
+            expires: 1 / 288
+          });
 
-      //     Cookies.set('refresh_token_level_up', response.data.refresh_token, {
-      //       ...cookieOptions,
-      //       expires: values.remember ? 7 : 1
-      //     });
+          Cookies.set('refresh_token_level_up', response.data.refresh_token, {
+            ...cookieOptions,
+            expires: values.remember ? 7 : 1
+          });
 
-      //     const decodedToken = jwtDecode<CustomJwtPayload>(response.data.access_token);
+          const decodedToken = jwtDecode<CustomJwtPayload>(response.data.access_token);
 
 
-      //     if (decodedToken?.user?.parent_role === "SUPER_ADMIN") {
-      //       router.push('/dashboard');
-      //       return;
-      //     }
+          if (decodedToken?.user?.parent_role === "SUPER_ADMIN") {
+            router.push('/dashboard');
+            return;
+          }
 
-      //     if (decodedToken?.user?.parent_role === "PARTNER_ADMIN") {
-      //       console.log(decodedToken, "responseData")
-      //       localStorage.setItem("Screens", JSON.stringify(decodedToken.user.user_roles));
-      //       try {
-      //         const partnerResponse = await axiosInstance.get<partnerResponse>(`/partners/authed`);
-      //         const redirectRoute = partnerResponse.data.data.can_upload_docs
-      //           ? '/onboarding'
-      //           : '/dashboard';
+          if (decodedToken?.user?.parent_role === "PARTNER_ADMIN") {
+            console.log(decodedToken, "responseData")
+            localStorage.setItem("Screens", JSON.stringify(decodedToken.user.user_roles));
+            try {
+              const partnerResponse = await axiosInstance.get<partnerResponse>(`/partners/authed`);
+              const redirectRoute = partnerResponse.data.data.can_upload_docs
+                ? '/onboarding'
+                : '/dashboard';
 
-      //         router.push(redirectRoute);
-      //       } catch (partnerError) {
-      //         console.log(partnerError);
-      //         router.push('/dashboard');
-      //       }
-      //       return;
-      //     }
-      //     router.push('/dashboard');
+              router.push(redirectRoute);
+            } catch (partnerError) {
+              console.log(partnerError);
+              router.push('/dashboard');
+            }
+            return;
+          }
+          router.push('/dashboard');
 
-      //   }
-      // } catch (err) {
-      //   const axiosError = err as AxiosError<ErrorResponse>;
-      //   if (axiosError.response?.data?.message) {
-      //     setError(axiosError.response.data.message);
-      //   } else if (axiosError.request) {
-      //     setError("No response from server. Please try again.");
-      //   } else {
-      //     setError("An unexpected error occurred. Please try again.");
-      //   }
-      // } finally {
-      //   setIsLoading(false);
-      // }
+        }
+      } catch (err) {
+        const axiosError = err as AxiosError<ErrorResponse>;
+        if (axiosError.response?.data?.message) {
+          setError(axiosError.response.data.message);
+        } else if (axiosError.request) {
+          setError("No response from server. Please try again.");
+        } else {
+          setError("An unexpected error occurred. Please try again.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
     },
     [router]
   );

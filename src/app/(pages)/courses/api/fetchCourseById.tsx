@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { axiosInstance } from '@/app/configs/axios';
 import { AxiosError } from 'axios';
+import { University } from '../../universities/hooks/useGetUniversities';
 
 export interface Course {
     id: number;
@@ -15,6 +16,7 @@ export interface Course {
     tution_fee: string;
     requirements: string[];
     university_id: number;
+    university:University;
     created_at: string;
     updated_at: string;
 }

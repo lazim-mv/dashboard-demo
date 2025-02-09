@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Dropdown, message, Space, Table, Tooltip } from "antd";
-import type { TableProps, PaginationProps, TableColumnsType } from "antd";
+import type { TableProps, PaginationProps } from "antd";
 import { useRouter } from "next/navigation";
 import BorderContainer from "@/app/Components/common/BorderContainer";
 import FormTitle from "@/app/Components/common/FormTitle";
@@ -165,9 +165,9 @@ const ApplicationPage: React.FC = () => {
     console.log(id);
   }
 
-  const handleStatusChange = (id: number | undefined, status: string) => {
-    console.log(id, status);
-  }
+  // const handleStatusChange = (id: number | undefined, status: string) => {
+  //   console.log(id, status);
+  // }
 
   const columns: TableProps<ApplicationType>["columns"] = [
     {
