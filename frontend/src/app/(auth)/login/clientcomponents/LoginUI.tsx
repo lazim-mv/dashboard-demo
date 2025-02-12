@@ -181,7 +181,7 @@ const LoginUI: React.FC = () => {
         display: "flex",
       }}
     >
-      <p>API Key: {process.env.API_KEY}</p>
+      <p>API Key: {process.env.SERVER_URL}</p>
       <Row align="middle" justify="center" style={{ height: "100vh" }}>
         <Form
           name="login"
