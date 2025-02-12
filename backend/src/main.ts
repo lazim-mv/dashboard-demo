@@ -24,8 +24,13 @@ async function bootstrap() {
     fastifyAdapter,
   );
   app.enableCors({
-    origin: process.env.FRONTEND_URL || process.env.LOCAL_URL,
+    origin: [
+      process.env.FRONTEND_URL, 
+      process.env.LOCAL_URL, 
+    ].filter(Boolean), 
+    credentials: true, 
   });
+
   app.register(FastifyMultipart);
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
