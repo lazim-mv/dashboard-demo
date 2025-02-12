@@ -92,6 +92,8 @@ const LoginUI: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  console.log(process.env.SERVER_URL, "SERVER_URL");
+
   const onFinish: FormProps<FieldType>["onFinish"] = useCallback(
     async (values: FieldType) => {
       setIsLoading(true);
@@ -181,7 +183,6 @@ const LoginUI: React.FC = () => {
         display: "flex",
       }}
     >
-      <p>API Key: {process.env.SERVER_URL}</p>
       <Row align="middle" justify="center" style={{ height: "100vh" }}>
         <Form
           name="login"
