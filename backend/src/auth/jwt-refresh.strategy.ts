@@ -31,10 +31,12 @@ export class JwtRefreshStrategy extends PassportStrategy(
     Awaited<ReturnType<AuthService['validateUser']>> & { refreshToken: string }
   > {
     try {
+      // Extract refresh token from Authorization header
       const refreshToken = req.headers.authorization
         ?.replace('Bearer', '')
         .trim();
-      if (!refreshToken) throw new ForbiddenException();
+
+      // Fetch user from database
       const userFromDb = await this.prisma.user.findUnique({
         select: {
           id: true,
@@ -54,33 +56,26 @@ export class JwtRefreshStrategy extends PassportStrategy(
               },
             },
           },
-          refresh_tokens: {
-            where: {
-              token: refreshToken,
-            },
-          },
         },
         where: {
           email: payload.user.email,
         },
       });
 
-      //if refresh token associated with the user is not found in the db
-      if (userFromDb.refresh_tokens.length === 0) {
-        throw new ForbiddenException();
-      }
+      // Convert roles structure
       const user = {
         ...userFromDb,
         user_roles: userFromDb.user_roles.map((role) => role.role),
       };
-      delete user.refresh_tokens;
+
       return {
         ...user,
-        refreshToken,
+        refreshToken: refreshToken || '',
       };
     } catch (err) {
       console.log(err);
       throw err;
     }
   }
+
 }
