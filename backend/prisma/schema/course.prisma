@@ -1,0 +1,29 @@
+model Course {
+  id Int @id @default(autoincrement())
+
+  name  String @db.VarChar(255)
+  level String @db.VarChar(50)
+
+  intake  String[]
+  subject String   @db.VarChar(100)
+
+  duration String   @db.VarChar(50)
+  awards   String[]
+
+  document_url String? @db.Text
+  tution_fee   String
+
+  requirements  String[]
+  university_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  university   University        @relation(fields: [university_id], references: [id])
+  shortlist    CourseShortlist[]
+  applications Application[]
+
+  @@unique([name, university_id]) // Prevent duplicate courses in same university
+  @@index([university_id])
+  @@index([name, university_id]) // For faster lookups
+}

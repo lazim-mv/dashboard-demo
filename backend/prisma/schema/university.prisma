@@ -1,0 +1,17 @@
+model University {
+  id              Int      @id @default(autoincrement())
+  university_name String
+  country         String
+  location        String
+  description     String   @db.Text // Using Text for longer content
+  document_url    String?
+  logo_url        String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Optional: Add relations if needed
+  courses Course[]
+  // students       Student[]
+
+  @@map("universities") // Specify table name in database
+}

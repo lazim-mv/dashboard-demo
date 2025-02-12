@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 
 export async function middleware(request: NextRequest) {
-  // const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
   const url = request.nextUrl.clone();
 
   const publicPaths = [
@@ -16,18 +16,18 @@ export async function middleware(request: NextRequest) {
     "/auth",
   ];
 
-  // const protectedRoutes = [
-  //   '/dashboard',
-  //   '/onboarding',
-  //   '/profile',
-  //   '/administrator',
-  //   '/partner',
-  //   '/students',
-  //   // Add other routes that require authentication
-  // ]
+  const protectedRoutes = [
+    '/dashboard',
+    '/onboarding',
+    '/profile',
+    '/administrator',
+    '/partner',
+    '/students',
+    // Add other routes that require authentication
+  ]
 
 
-  // const authRoutes = ['/login']
+  const authRoutes = ['/login']
 
   const isPublicPath = publicPaths.some((path) =>
     url.pathname.startsWith(path)
@@ -37,43 +37,43 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // const path = request.nextUrl.pathname
+  const path = request.nextUrl.pathname
 
-  // const accessToken = request.cookies.get('access_token_level_up')?.value
-  // const refreshToken = request.cookies.get('refresh_token_level_up')?.value
-
-
-  // const isProtectedRoute = protectedRoutes.some(route =>
-  //   path.startsWith(route)
-  // )
-
-  // if (pathname === '/') {
-  //   return refreshToken
-  //     ? NextResponse.redirect(new URL('/dashboard', request.url))
-  //     : NextResponse.redirect(new URL('/login', request.url));
-  // }
+  const accessToken = request.cookies.get('access_token_level_up')?.value
+  const refreshToken = request.cookies.get('refresh_token_level_up')?.value
 
 
-  // const isAuthRoute = authRoutes.includes(path)
+  const isProtectedRoute = protectedRoutes.some(route =>
+    path.startsWith(route)
+  )
+
+  if (pathname === '/') {
+    return refreshToken
+      ? NextResponse.redirect(new URL('/dashboard', request.url))
+      : NextResponse.redirect(new URL('/login', request.url));
+  }
 
 
-  // if (isProtectedRoute && !refreshToken) {
-  //   return NextResponse.redirect(new URL('/login', request.url))
-  // }
+  const isAuthRoute = authRoutes.includes(path)
 
 
-  // if (isAuthRoute && refreshToken) {
-  //   return NextResponse.redirect(new URL('/dashboard', request.url))
-  // }
+  if (isProtectedRoute && !refreshToken) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+
+
+  if (isAuthRoute && refreshToken) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
 
 
 
-  // const studentIdMatch = pathname.match(/^\/students\/([^\/]+)$/);
-  // if (studentIdMatch) {
-  //   const studentId = studentIdMatch[1];
-  //   url.pathname = `/students/${studentId}/submission`;
-  //   return NextResponse.redirect(url);
-  // }
+  const studentIdMatch = pathname.match(/^\/students\/([^\/]+)$/);
+  if (studentIdMatch) {
+    const studentId = studentIdMatch[1];
+    url.pathname = `/students/${studentId}/submission`;
+    return NextResponse.redirect(url);
+  }
 
   return NextResponse.next();
 }

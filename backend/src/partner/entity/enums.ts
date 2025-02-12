@@ -1,0 +1,7 @@
+export enum PartnerStatusEnum {
+  CREATED = 'CREATED',
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  BLOCKED = 'BLOCKED',
+  RESUBMISSION = 'RESUBMISSION',
+}

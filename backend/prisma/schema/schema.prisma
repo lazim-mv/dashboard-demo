@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  password       String
+  parent_role    ParentUserRole
+  refresh_tokens RefreshToken[]
+  user_roles     UserRole[]
+  partner        Partner?       @relation(fields: [partner_id], references: [id])
+  partner_id     Int?
+}
+
+enum ParentUserRole {
+  SUPER_ADMIN
+  PARTNER_ADMIN
+}
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String // e.g., 'PartnerAdmin', 'StudentManager'
+  partner     Partner      @relation(fields: [partner_id], references: [id])
+  partner_id  Int
+  permissions Permission[]
+  screens     Screen[]
+  UserRole    UserRole[]
+
+  @@unique([name, partner_id])
+}
+
+model UserRole {
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
+  role_id Int
+  role    Role @relation(fields: [role_id], references: [id])
+
+  @@id([user_id, role_id])
+}
+
+model Permission {
+  id         Int                @id @default(autoincrement())
+  type       PermissionType     @default(NORMAL)
+  resource   PermissionResource
+  actions    PermissionAction[]
+  created_at DateTime           @default(now())
+  updated_at DateTime           @updatedAt
+  role       Role               @relation(fields: [role_id], references: [id])
+  role_id    Int
+}
+
+model Screen {
+  id           Int                @id @default(autoincrement())
+  resource     ScreenResource
+  display_name String
+  route        String
+  actions      PermissionAction[]
+  sub_screens  Screen[]           @relation("parent_child_screen")
+
+  roles            Role[]
+  parent_screen    Screen? @relation("parent_child_screen", fields: [parent_screen_id], references: [id])
+  parent_screen_id Int?
+}
+
+enum PermissionType {
+  NORMAL
+  SCREEN
+}
+
+enum PermissionResource {
+  DASHBOARD
+  STUDENTS
+  COURSE_SEARCH
+  NOTIFICATION
+  ADMINISTRATION
+  UNIVERSITIES
+  PARTNERS
+  LOCK
+}
+
+enum PermissionAction {
+  READ
+  WRITE
+  UPDATE
+  DELETE
+}
+
+enum ScreenResource {
+  DASHBOARD
+  STUDENTS
+  COURSES
+  COURSE_SEARCH
+  COURSE_LIST
+  NOTIFICATION
+  ADMINISTRATION
+  USERS
+  ROLES
+  UNIVERSITIES
+  PARTNERS
+}
+
+model RefreshToken {
+  id      Int    @id @default(autoincrement())
+  token   String
+  user_id Int
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@unique([token, user_id])
+}
+
+model Partner {
+  id                     Int                    @id @default(autoincrement())
+  lead                   Lead                   @relation(fields: [id], references: [id])
+  first_name             String
+  last_name              String
+  email                  String                 @unique
+  mobile_no              String                 @unique
+  status                 PartnerStatus          @default(CREATED)
+  whatsapp_no            String
+  company_name           String                 @unique
+  website                String
+  address                String
+  city                   String
+  post_code              String
+  country                String
+  partner_status_history PartnerStatusHistory[]
+
+  //documents
+  can_upload_docs      Boolean @default(true)
+  resubmit_note        String?
+  pan_card_url         String?
+  cancelled_cheque_url String?
+  gst_spice_letter_url String?
+
+  users    User[]
+  Role     Role[]
+  students Student[]
+}
+
+enum PartnerStatus {
+  CREATED
+  PENDING
+  RESUBMISSION
+  ACTIVE
+  BLOCKED
+}
+
+model Lead {
+  id          Int         @id @default(autoincrement())
+  url_id      String      @unique @default(uuid())
+  name        String
+  phone_no    String      @unique
+  email       String      @unique
+  company     String
+  lead_status LeadStatus  @default(NEW_LEAD)
+  source      LeadSource? @relation(fields: [source_id], references: [id])
+  source_id   Int?
+  partner     Partner?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model LeadSource {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  leads Lead[]
+}
+
+model PartnerStatusHistory {
+  id         Int        @id @default(autoincrement())
+  status     LeadStatus
+  partner_id Int
+  partner    Partner    @relation(fields: [partner_id], references: [id])
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+enum LeadStatus {
+  NEW_LEAD
+  CONTACTED
+  CONVERTED
+  LOST
+  BLOCKED
+}

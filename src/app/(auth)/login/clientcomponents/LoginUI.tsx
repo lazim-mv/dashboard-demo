@@ -97,8 +97,6 @@ const LoginUI: React.FC = () => {
       setIsLoading(true);
       setError("");
 
-      router.push('/dashboard');
-
       try {
         const response = await axios.post<LoginResponse>("/auth/login", {
           email: values.username,

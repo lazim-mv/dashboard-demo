@@ -1,0 +1,265 @@
+model Student {
+  id                         Int      @id @default(autoincrement())
+  name                       String
+  surname                    String
+  email                      String
+  phone_no                   String
+  dob                        DateTime
+  gender                     Gender
+  nationality                String
+  birth_country              String
+  native_language            String?
+  passport_issue_location    String
+  passport_number            String
+  issue_date                 DateTime
+  expiry_date                DateTime
+  skype_id                   String?
+  alternate_phone_no         String?
+  is_permanent_current_same  Boolean?
+  permanent_address          Address? @relation("permanent_address", fields: [permanent_address_id], references: [id])
+  permanent_address_id       Int?
+  current_address            Address? @relation("current_address", fields: [current_address_id], references: [id])
+  current_address_id         Int?
+  //emergency contact details
+  emergency_contact_name     String?
+  emergency_contact_no       String?
+  emergency_contact_email    String?
+  emergency_contact_relation String?
+  emergency_contact_address  String?
+
+  status     StudentStatus     @default(INITIATED)
+  tab_status StudentTabStatus?
+
+  partner_id Int
+  partner    Partner @relation(fields: [partner_id], references: [id])
+
+  comment                  String?
+  education                StudentEducation?
+  travel_immigration       TravelImmigration?
+  referee_details          RefereeDetails[]
+  referee_details_comments String?
+  work_details             WorkDetails[]
+  work_details_comments    String?
+  shortlist_comment        String?
+  application_comment      String?
+  document                 StudentDocuments?
+  vfs_documents            VFSDocuments[]
+
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+  applications     Application[]
+  course_shortlist CourseShortlist[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum StudentStatus {
+  INITIATED
+  SUBMISSION_COMPLETED
+  INTERVIEW_COMPLETED
+  OFFER_LETTER_GRANTED
+  VFS_COMPLETED
+  VISA_GRANTED
+}
+
+enum StudentTabStatus {
+  PERSONAL_DETAILS
+  EDUCATION
+  TRAVEL_IMMIGRATION
+  REFEREE_DETAILS
+  WORK_DETAILS
+  DOCUMENTS
+  SHORT_LIST_APPLY
+  APPLICATIONS
+  MESSAGE
+}
+
+model Address {
+  id                Int       @id @default(autoincrement())
+  country           String
+  address1          String
+  address2          String
+  post_code         String
+  state             String
+  city              String
+  permanent_address Student[] @relation("permanent_address")
+  current_address   Student[] @relation("current_address")
+}
+
+model StudentEducation {
+  id                   Int               @id @default(autoincrement())
+  student              Student           @relation(fields: [id], references: [id])
+  academic_history     AcademicHistory[]
+  academic_interest_id Int?
+  academic_interest    AcademicInterest? @relation(fields: [academic_interest_id], references: [id])
+  proficient_languages Language[]
+  comment              String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model AcademicHistory {
+  id                   Int              @id @default(autoincrement())
+  country              String
+  institution          String
+  course               String
+  level_of_study       LevelOfStudy
+  start_date           DateTime
+  end_date             DateTime
+  result_percent       Float
+  student_education    StudentEducation @relation(fields: [student_education_id], references: [id])
+  student_education_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum LevelOfStudy {
+  HIGHER_SECONDARY
+  UNDERGRADUATE
+  GRADUATE
+  DOCTORAL
+}
+
+model AcademicInterest {
+  id                Int                @id @default(autoincrement())
+  country           String
+  level_of_study    LevelOfStudy
+  programme         String
+  intake            String
+  location          String
+  student_education StudentEducation[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Language {
+  id                    Int              @id @default(autoincrement())
+  name                  String
+  level_of_proficiencey String
+  years_of_experience   Int
+  StudentEducation      StudentEducation @relation(fields: [student_education_id], references: [id])
+  student_education_id  Int
+}
+
+model TravelImmigration {
+  id                                    Int      @id @default(autoincrement())
+  student                               Student  @relation(fields: [id], references: [id])
+  //has the student applied for persmission in any of specified countries in past 10 years
+  stay_permission_in_specific_countries Boolean?
+  // does this student need a visa to stay in specified countries
+  need_visa_for_specific_countries      String[]
+  //for any country has this student ever been refused permission to stay or remain, refused asylum or deported
+  visa_rejections_for_any_countries     Boolean?
+  has_health_issues                     Boolean?
+  health_issue_details                  String?
+  comment                               String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model RefereeDetails {
+  id         Int     @id @default(autoincrement())
+  name       String
+  position   String
+  email      String
+  mobile_no  String
+  address    String
+  student_id Int
+  student    Student @relation(fields: [student_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model WorkDetails {
+  id                   Int      @id @default(autoincrement())
+  title                String
+  organisation         String
+  organisation_address String
+  phone_no             String
+  email                String
+  from_date            DateTime
+  to_date              DateTime
+  student_id           Int
+  student              Student  @relation(fields: [student_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model StudentDocuments {
+  id                 Int     @id @default(autoincrement())
+  student            Student @relation(fields: [id], references: [id])
+  photo              String?
+  passport           String?
+  pg                 String?
+  pg_marksheet       String?
+  ug                 String?
+  ug_marksheet       String?
+  higher_sec         String?
+  tenth              String?
+  lor                String?
+  moi                String?
+  cv                 String?
+  exp_cert           String?
+  sop                String?
+  other_diploma_cert String?
+  others             String?
+  comment            String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model VFSDocuments {
+  id         Int     @id @default(autoincrement())
+  url        String
+  student_id Int
+  student    Student @relation(fields: [student_id], references: [id])
+}
+
+model CourseShortlist {
+  id         Int     @id @default(autoincrement())
+  course_id  Int
+  course     Course  @relation(fields: [course_id], references: [id])
+  intake     String
+  student_id Int
+  student    Student @relation(fields: [student_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([student_id, course_id])
+}
+
+model Application {
+  id           Int               @id @default(autoincrement())
+  status       ApplicationStatus @default(ONGOING)
+  name         String            @db.VarChar(255)
+  level        String            @db.VarChar(50)
+  intake       String
+  subject      String            @db.VarChar(100)
+  duration     String            @db.VarChar(50)
+  awards       String[]
+  tution_fee   Float
+  requirements String[]
+  course_id    Int
+  course       Course            @relation(fields: [course_id], references: [id])
+  student_id   Int
+  student      Student           @relation(fields: [student_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum ApplicationStatus {
+  ONGOING
+}
