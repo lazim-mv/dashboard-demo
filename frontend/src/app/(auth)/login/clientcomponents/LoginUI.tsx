@@ -146,6 +146,7 @@ const LoginUI: React.FC = () => {
             return;
           }
           router.push('/dashboard');
+          setIsLoading(false);
 
         }
       } catch (err) {
