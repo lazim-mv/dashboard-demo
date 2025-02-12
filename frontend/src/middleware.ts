@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
-  const accessToken = request.cookies.get('access_token_level_up')?.value
+  // const accessToken = request.cookies.get('access_token_level_up')?.value
   const refreshToken = request.cookies.get('refresh_token_level_up')?.value
 
 
