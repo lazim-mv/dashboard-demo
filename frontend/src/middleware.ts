@@ -68,12 +68,12 @@ export async function middleware(request: NextRequest) {
 
 
 
-  const studentIdMatch = pathname.match(/^\/students\/([^\/]+)$/);
-  if (studentIdMatch) {
-    const studentId = studentIdMatch[1];
-    url.pathname = `/students/${studentId}/submission`;
-    return NextResponse.redirect(url);
-  }
+  // const studentIdMatch = pathname.match(/^\/students\/([^\/]+)$/);
+  // if (studentIdMatch) {
+  //   const studentId = studentIdMatch[1];
+  //   url.pathname = `/students/${studentId}/submission`;
+  //   return NextResponse.redirect(url);
+  // }
 
   return NextResponse.next();
 }

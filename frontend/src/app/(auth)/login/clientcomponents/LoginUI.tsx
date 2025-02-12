@@ -92,7 +92,7 @@ const LoginUI: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  console.log(process.env.NEXT_PUBLIC_SERVER_URL, "SERVER_URL");
+  // console.log(process.env.NEXT_PUBLIC_SERVER_URL, "SERVER_URL");
 
   const onFinish: FormProps<FieldType>["onFinish"] = useCallback(
     async (values: FieldType) => {
