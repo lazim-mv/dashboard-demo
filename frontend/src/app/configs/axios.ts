@@ -17,7 +17,7 @@ interface QueueItem {
 }
 
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.SERVER_URL,
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -43,7 +43,7 @@ const refreshToken = async (): Promise<string> => {
     if (!refresh_token) throw new Error('No refresh token available');
 
     const response: AxiosResponse<TokenResponse> = await axios.get(
-      `${process.env.SERVER_URL}auth/refresh`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}auth/refresh`,
       {
         headers: {
           Authorization: `Bearer ${refresh_token}`,
